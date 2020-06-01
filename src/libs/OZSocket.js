@@ -229,7 +229,7 @@ class OZSocket {
       room: 預設是all,一般以site為單位
       from:
       to:
-      data:
+      data: { type: , state}
     }
     _serverUrl="https://rd.jabezpos.com"
     _serverPath="/socket/socket.io" || /socket.io
@@ -242,7 +242,7 @@ class OZSocket {
       _serverPath = dataObj.serverPath || null
       if (dataObj.ns !== undefined && dataObj.ns !== 'all') _serverUrl = `${_serverUrl}/${dataObj.ns}`
       if (_room !== 'all') _serverUrl = `${_serverUrl}?room=${_room}`
-      // console.log('_serverUrl='+_serverUrl+" _serverPath="+_serverPath)
+      console.log('_serverUrl='+_serverUrl+" _serverPath="+_serverPath)
       if (_serverUrl.indexOf('https') !== -1) {
         if (_serverPath === null || _serverPath === 'null') {
           socket = client(_serverUrl, { reconnect: true, secure: true })
