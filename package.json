@@ -1,0 +1,34 @@
+{
+  "name": "node-mq-socket",
+  "version": "1.0.0",
+  "description": "rabbitmq with socket io",
+  "main": "src/index.js",
+  "dependencies": {
+    "amqplib": "^0.5.6",
+    "express": "^4.17.1",
+    "http": "0.0.1-security",
+    "js-yaml": "^3.14.0",
+    "moment": "^2.26.0",
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0",
+    "socket.io-redis": "^5.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ozzysun/node-mq-socket.git"
+  },
+  "keywords": [
+    "socket.io",
+    "rabbitmq"
+  ],
+  "author": "ozysun",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ozzysun/node-mq-socket/issues"
+  },
+  "homepage": "https://github.com/ozzysun/node-mq-socket#readme"
+}
