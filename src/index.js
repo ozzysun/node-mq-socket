@@ -3,6 +3,7 @@ const { getChannelById, queueReceive } = require('./libs/mq-utils')
 const defaultSetting = require('./setting')
 const express = require('express')
 const OZSocket = require('./libs/OZSocket')
+const { broadCast } = require('./libs/OZSocketClient')
 let socket = null
 // 載入外部conf下的config檔案
 const loadConfig = async(setting = null) => {
@@ -15,13 +16,14 @@ const loadConfig = async(setting = null) => {
   result.require2 = require // 儲存require在動態載入用
   return result
 }
+// 建立socket server
 const getSocket = ({ config, socketSite, port, channel = 'all'}) => {
   const app = express()
   const router = express.Router()
   app.use('/', router)
   const mySocket = new OZSocket({ app, config, socketSite } )
   mySocket.listen((data) => {
-    console.log(`Socket RECEIVE Data =${data}`)
+    // console.log(`Socket RECEIVE Data =${data}`)
   })
   return mySocket
   
@@ -53,7 +55,7 @@ const mqInit = async({hostData, hostId, channelId, socket }) => {
           }
         }
         */
-        socket.broadCast(content)
+        broadCast(content)
       },
       option: {
         noAck: true

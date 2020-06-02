@@ -2,7 +2,6 @@
 'use strict'
 const http = require('http')
 const Server = require('socket.io')
-const client = require('socket.io-client')
 const moment = require('moment')
 const redis = require('socket.io-redis')
 class OZSocket {
@@ -53,15 +52,11 @@ class OZSocket {
           return
         }
         socket.join(siteRoom, () => {
-          console.log('join room ==' + siteRoom)
+          this.log(`join room =${siteRoom} client_id=${socket.id}`)
         })
         // ---
         this.getClients(server, (clients) => {
-          if (ns === 'all') {
-            this.log(`[${now}]新連線加入!! 目前總連線數=${clients.length}`)
-          } else {
-            this.log(`[${now}] (${ns})新連線加入!! 目前連線數=${clients.length}`)
-          }
+          this.log(`[${now}][${ns}]新連線加入!! 目前總連線數=${clients.length}`)
         })
         this.socketHandler(server, socket, siteRoom, callback)
       })
@@ -103,9 +98,9 @@ class OZSocket {
     socket.on('join', (room) => {
       socket.leave()
       socket.join(room)
-      console.log('join room=' + room)
+      this.log('join room=' + room)
       for (const prop in this.io.sockets.adapter.rooms) {
-        console.log('room=' + prop + ' length=' + this.io.sockets.adapter.rooms[room].length)
+        this.log('room=' + prop + ' length=' + this.io.sockets.adapter.rooms[room].length)
       }
     })
     socket.on('leave', (room) => {
@@ -161,7 +156,7 @@ class OZSocket {
     if (server === null) server = this.io
     server.clients((err, clients) => {
       if (err) {
-        console.log(err)
+        this.log(err)
       } else {
         if (callback !== null) callback(clients)
       }
@@ -218,61 +213,6 @@ class OZSocket {
       result.push(remoteIp)
     }
     if (callback !== null) callback(result)
-  }
-  // 由server端廣播出去
-  broadCast(dataObj = null, callback = null) {
-    /*
-    dataObj = {
-      serverURL:非必要 要使用來廣播的socket server位置 http://xxx:54321
-      serverPath:
-      ns: 非必要 目前都會是用all
-      room: 預設是all,一般以site為單位
-      from:
-      to:
-      data: { type: , state}
-    }
-    _serverUrl="https://rd.jabezpos.com"
-    _serverPath="/socket/socket.io" || /socket.io
-    */
-    let _serverUrl, socket, _serverPath, _room
-    if (dataObj !== null) {
-      _room = (dataObj.room !== undefined) ? dataObj.room : 'all'
-      _serverUrl = dataObj.server || 'http://localhost:54321'
-      if (_serverUrl.indexOf('http') === -1) _serverUrl = `http://${_serverUrl}:54321`
-      _serverPath = dataObj.serverPath || null
-      if (dataObj.ns !== undefined && dataObj.ns !== 'all') _serverUrl = `${_serverUrl}/${dataObj.ns}`
-      if (_room !== 'all') _serverUrl = `${_serverUrl}?room=${_room}`
-      console.log('_serverUrl='+_serverUrl+" _serverPath="+_serverPath)
-      if (_serverUrl.indexOf('https') !== -1) {
-        if (_serverPath === null || _serverPath === 'null') {
-          socket = client(_serverUrl, { reconnect: true, secure: true })
-        } else {
-          socket = client(_serverUrl, { reconnect: true, secure: true, path: _serverPath })
-        }
-      } else {
-        if (_serverPath === null || _serverPath === 'null') {
-          socket = client(_serverUrl, { reconnect: true })
-        } else {
-          socket = client(_serverUrl, { reconnect: true, path: _serverPath })
-        }
-      }
-      this.trace(`broadcast _serverUrl=${_serverUrl} _serverPath=${_serverPath} room=${_room}`)
-      socket.on('connect', () => {
-        const data = {
-          from: dataObj.from || 'BroadCastServer',
-          to: dataObj.to,
-          time: new Date().getTime(),
-          data: dataObj.data
-        }
-        socket.emit(_room, data)
-        setTimeout(() => {
-          socket.disconnect()
-        }, 300)
-        if (callback !== null) callback(data)
-      })
-    } else {
-      if (callback !== null) callback(null)
-    }
   }
   trace(info) {
     console.log(`[OZSocket]${info}`)
