@@ -24,7 +24,9 @@ const queueReceive = async(channel, queueArray) => {
         option[prop] = item.option[prop]
       }
     }
+    console.log(`channel listen ${item.name}`)
     channel.consume(item.name, (msg) => {
+      console.log(`message!! from ${item.name}`)
       const contentStr = msg.content.toString()
       let obj
       // 傳入非格式訊息 { data: , type:} 則以字串當作格式化

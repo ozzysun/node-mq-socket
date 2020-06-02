@@ -28,7 +28,7 @@ const getSocket = ({ config, socketSite, port, channel = 'all'}) => {
   return mySocket
   
 }
-const mqInit = async({hostData, hostId, channelId, socket }) => {
+const mqInit = async({hostData, hostId, channelId }) => {
   // 取得設定檔
   const mqConfig = hostData[hostId]
   // 建立連線 建立channel
@@ -40,19 +40,15 @@ const mqInit = async({hostData, hostId, channelId, socket }) => {
       name: 'socket',
       handler: (channel, content, msg) => {
         console.log(`Received [socket][noAck: true] queue Rock!! %s`, content)
-        // console.log(content)
         /*
-        const _data = {
-          server: `http://${socketHost}:54321`,
-          serverPath: '/socket.io',
-          ns: 'all',
-          from: from,
-          to: to,
-          room: room,
-          data: {
-            type: type,
-            state: state
-          }
+        content = {
+          url:非必要 要使用來廣播的socket server位置 預設為http://xxx:54321 // severUrl, server, serverURL 都可吃到
+          path: "/socket/socket.io" || /socket.io // serverPath 也可以吃到
+          room: 預設是all,一般以site為單位
+          ns: 非必要 目前都會是用all
+          from:
+          to:
+          data: { type: , state}
         }
         */
         broadCast(content)
@@ -80,9 +76,8 @@ const run = async() => {
   // 監聽mq
   const mqOpt = {
     hostData: configData.mqHost,
-    hostId: 'rabbitRD',
-    channelId: 'main',
-    socket
+    hostId: 'rabbitLocal',
+    channelId: 'main'
   }
   await mqInit(mqOpt)
 }
