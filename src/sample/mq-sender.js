@@ -6,19 +6,19 @@ const hostConfig = path.resolve('../../conf/mqHost.yml')
 const run = async() => {
   // 取得設定檔
   const hostData = await readYAML(hostConfig)
-  const mqConfig = hostData['rabbitLocal']
+  const mqConfig = hostData['rabbitRD']
   // 建立連線 建立channel
   const channel = await getChannelById(mqConfig, 'main').catch(e => {
     console.log(e)
   })
   const content = {
-    url: 'http://localhost:54321',
+    url: 'http://192.168.0.99:54321',
     path: null,
     room: 'mmjd5566',
     from: 'sender',
-    to: 'test',
+    to: 'kds/mmjd5566/000000',
     data: {
-      type: 'new',
+      type: 'WebMenu.HaveNewOrder',
       state: {
         name: 'oz'
       }
