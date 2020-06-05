@@ -76,7 +76,7 @@ const run = async() => {
   // 監聽mq
   const mqOpt = {
     hostData: configData.mqHost,
-    hostId: 'rabbitRD',
+    hostId: 'rabbitRD', // TODO: 需要依照環境改主機
     channelId: 'main'
   }
   await mqInit(mqOpt)

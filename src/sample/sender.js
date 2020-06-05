@@ -1,13 +1,13 @@
 const { getSocketClient, broadCast, send } = require('../libs/OZSocketClient')
 const runBroadCast = () => {
   const opt = {
-    url: 'http://localhost:54321',
-    path: null,
-    room: 'mmjd5566',
+    url: 'http://localhost',
+    path: '/socket.io',
+    room: 'testroom',
     from: 'sender',
-    to: 'test',
+    to: 'oz',
     data: {
-      type: 'new',
+      type: 'HaveNewOrder',
       state: {
         name: 'oz'
       }
@@ -19,23 +19,25 @@ const runBroadCast = () => {
 }
 const runSend = () => {
   const opt = {
-    url: 'http://localhost:54321',
-    path: null,
-    room: 'mmjd5566'
+    url: 'http://localhost',
+    path: '/socket.io',
+    room: 'testroom'
   }
   getSocketClient(opt, (client) => {
     console.log('client==')
     console.log(client)
     const obj = {
       from: 'sender',
-      to: 'mmjd5566', 
+      to: 'oz',
       data: {
-        type: 'new',
-        state: { name: 'oz'}
+        type: 'HaveNewOrder',
+        state: {
+          name: 'oz'
+        }
       }
     }
     send(client, obj)
   })
 }
-runBroadCast()
-// runSend()
+// runBroadCast()
+runSend()

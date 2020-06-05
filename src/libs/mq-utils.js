@@ -11,6 +11,7 @@ const getChannel = async(id, { protocol = 'amqp', hostname = 'localhost', port =
   } else {
     channel = await connection.createChannel()
   }
+  trace(`connect mq ${protocol}://${hostname}:${port}`)
   // 建立channel下所有的queue
   return channel
 }
@@ -92,5 +93,13 @@ const getAllow = async(config, channel) => {
     })
   }
   return result
+}
+const trace = (info) => {
+  if (typeof info === 'string') {
+    console.log(`[mq-utils]${info}`)
+  } else {
+    console.log(`[mq-utils]`)
+    console.log(info)
+  }
 }
 module.exports = { getChannel, queueReceive, queueSend, getChannelById }

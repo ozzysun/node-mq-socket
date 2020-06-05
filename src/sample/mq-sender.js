@@ -12,13 +12,13 @@ const run = async() => {
     console.log(e)
   })
   const content = {
-    url: 'http://192.168.0.99:54321',
-    path: null,
-    room: 'mmjd5566',
+    url: 'http://localhost',
+    path: '/socket.io',
+    room: 'testroom',
     from: 'sender',
-    to: 'kds/mmjd5566/000000',
+    to: 'oz',
     data: {
-      type: 'WebMenu.HaveNewOrder',
+      type: 'HaveNewOrder',
       state: {
         name: 'oz'
       }

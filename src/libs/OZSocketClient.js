@@ -35,6 +35,18 @@ dataObj = {
   ns: 非必要 目前都會是用all
   room: 預設是all,一般以site為單位
 }
+ex: socket server位置為 https://xxx.xxx:54321
+{
+  url: 'http://xxx.xxx.xx:54321',
+  path: '/socket.io'
+  room: 'myroom'
+}
+ex: socket server位置為 https://xxx.xxx/socket
+{
+  url: 'http://xxx.xxx.xx:54321',
+  path: '/socket/socket.io'
+  room: 'myroom'
+}
 */
 // 取得連線client物件
 const getSocketClient = ( dataObj, callback = null) => {
@@ -42,7 +54,7 @@ const getSocketClient = ( dataObj, callback = null) => {
   const { url, path, room } = getSocketParams(dataObj)
   // 建立client物件
   const opt = { reconnect: true, secure: url.indexOf('https') !== -1 }
-  if (path === null || path === 'null') opt.path = path
+  if (path !== null && path !== 'null') opt.path = path
   client = socketClient(url, opt)
   client.room = room // 紀錄room在client上
   // event handler
@@ -70,6 +82,8 @@ const send = (client, { from, to, data }, callback = null) => {
       from, to, data,
       time: new Date().getTime()
     }
+    console.log(`send room=${client.room}`)
+    console.log(opt)
     client.emit(client.room, opt)
     if (callback !== null) callback()
   }, 1000)
@@ -78,6 +92,7 @@ const send = (client, { from, to, data }, callback = null) => {
 const getSocketParams = (dataObj, port= 54321) => {
   // 如果設定值為url或 server 或serverUrl都可接受 否則預設為localhost, 若未帶prototo補進去
   let url = dataObj.url || dataObj.server || dataObj.serverUrl || dataObj.serverURL || 'http://localhost:${port}'
+  // 沒有http則補上port
   if (url.indexOf('http') === -1) url = `http://${url}:${port}`
   // 有設定ns則加入url內
   if (dataObj.ns !== undefined && dataObj.ns !== 'all') url = `${url}/${dataObj.ns}`
