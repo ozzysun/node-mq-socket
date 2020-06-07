@@ -55,6 +55,10 @@ const queueSend = async(channel, { queue = 'main', data, option = null}) => {
     channel.sendToQueue(queue, Buffer.from(JSON.stringify(sendObj)))
   }
   console.log(' [x] Send %s to %s', data, queue)
+  setTimeout(() => {
+    channel.connection.close()
+  }, 100)
+  return
 }
 // --public 取得channel 並建立channel下的queue { config: mqConf設定檔資料, host:mq主機id, channel:channel id}
 const getChannelById = async(config, channel) => {
