@@ -23,7 +23,6 @@ const broadCast = (dataObj = null, callback = null) => {
       to: dataObj.to,
       data: dataObj.data
     }, () => {
-      client.disconnect()
       if (callback !== null) callback(dataObj)
     })
   })
@@ -49,13 +48,13 @@ ex: socket server位置為 https://xxx.xxx/socket
 }
 */
 // 取得連線client物件
-const getSocketClient = ( dataObj, callback = null) => {
+const getSocketClient = (dataObj, callback = null) => {
   // 取得廣播需要的參數
   const { url, path, room } = getSocketParams(dataObj)
   // 建立client物件
   const opt = { reconnect: true, secure: url.indexOf('https') !== -1 }
   if (path !== null && path !== 'null') opt.path = path
-  client = socketClient(url, opt)
+  const client = socketClient(url, opt)
   client.room = room // 紀錄room在client上
   // event handler
   client.on('connect', () => {
@@ -76,17 +75,13 @@ const getSocketClient = ( dataObj, callback = null) => {
   })
 }
 const send = (client, { from, to, data }, callback = null) => {
-  // 需做delay 接收才能處理
-  setTimeout(() => {
-    const opt = {
-      from, to, data,
-      time: new Date().getTime()
-    }
-    console.log(`send room=${client.room}`)
-    console.log(opt)
-    client.emit(client.room, opt)
-    if (callback !== null) callback()
-  }, 1000)
+  const opt = {
+    from, to, data,
+    time: new Date().getTime()
+  }
+  client.emit(client.room, opt)
+  client.disconnect()
+  if (callback !== null) callback()
 }
 // 取得連線設定 TODO
 const getSocketParams = (dataObj, port= 54321) => {

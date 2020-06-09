@@ -4,6 +4,7 @@ const defaultSetting = require('./setting')
 const express = require('express')
 const OZSocket = require('./libs/OZSocket')
 const { broadCast } = require('./libs/OZSocketClient')
+let testCount = 0
 let socket = null
 // 載入外部conf下的config檔案
 const loadConfig = async(setting = null) => {
@@ -23,7 +24,8 @@ const getSocket = ({ config, socketSite, port, channel = 'all'}) => {
   app.use('/', router)
   const mySocket = new OZSocket({ app, config, socketSite } )
   mySocket.listen((data) => {
-    // console.log(`Socket RECEIVE Data =${data}`)
+    // console.log(`Socket RECEIVE Data =`)
+    // console.log(data)
   })
   return mySocket
   
@@ -39,7 +41,9 @@ const mqInit = async({hostData, hostId, channelId }) => {
     { 
       name: 'socket',
       handler: (channel, content, msg) => {
-        console.log(`Received [socket][noAck: true] queue Rock!! %s`, content)
+        // console.log(`Received [socket][noAck: true] queue Rock!! %s`, content)
+        testCount = testCount + 1
+        console.log(`testCount=${testCount}`)
         /*
         content = {
           url:非必要 要使用來廣播的socket server位置 預設為http://xxx:54321 // severUrl, server, serverURL 都可吃到
@@ -51,10 +55,13 @@ const mqInit = async({hostData, hostId, channelId }) => {
           data: { type: , state}
         }
         */
-        broadCast(content)
+        broadCast(content, () => {
+          console.log(`after run broad cast=${testCount}`)
+          channel.ack(msg)
+        })
       },
       option: {
-        noAck: true
+        noAck: false
       }
     }
   ]
@@ -76,7 +83,7 @@ const run = async() => {
   // 監聽mq
   const mqOpt = {
     hostData: configData.mqHost,
-    hostId: 'rabbitRD', // TODO: 需要依照環境改主機
+    hostId: 'rabbitLocal', // TODO: 需要依照環境改主機
     channelId: 'main'
   }
   await mqInit(mqOpt)
