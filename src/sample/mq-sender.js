@@ -12,7 +12,7 @@ const run = async() => {
     console.log(e)
   })
   const content = {
-    url: 'http://localhost',
+    url: 'http://127.0.0.1',
     path: '/socket.io',
     room: 'testroom',
     from: 'sender',

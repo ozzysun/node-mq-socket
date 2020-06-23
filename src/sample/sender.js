@@ -1,7 +1,7 @@
 const { getSocketClient, broadCast, send } = require('../libs/OZSocketClient')
 const runBroadCast = () => {
   const opt = {
-    url: 'http://localhost',
+    url: 'http://127.0.0.1',
     path: '/socket.io',
     room: 'testroom',
     from: 'sender',
@@ -19,7 +19,7 @@ const runBroadCast = () => {
 }
 const runSend = () => {
   const opt = {
-    url: 'http://localhost',
+    url: 'http://127.0.0.1',
     path: '/socket.io',
     room: 'testroom'
   }

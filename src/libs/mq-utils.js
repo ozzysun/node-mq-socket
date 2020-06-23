@@ -1,6 +1,6 @@
 const amqp = require('amqplib')
 // 建立連線並取得channel
-const getChannel = async(id, { protocol = 'amqp', hostname = 'localhost', port = '5672', frameMax = 0, heartbeat = 0, vhost = '/', username, password }, isConfirm = false) => {
+const getChannel = async(id, { protocol = 'amqp', hostname = '127.0.0.1', port = '5672', frameMax = 0, heartbeat = 0, vhost = '/', username, password }, isConfirm = false) => {
   const opt = { protocol, hostname, port, frameMax, heartbeat, vhost }
   if (username !== undefined) opt.username = username
   if (password !== undefined) opt.password = password

@@ -86,7 +86,9 @@ const send = (client, { from, to, data }, callback = null) => {
 // 取得連線設定 TODO
 const getSocketParams = (dataObj, port= 54321) => {
   // 如果設定值為url或 server 或serverUrl都可接受 否則預設為localhost, 若未帶prototo補進去
-  let url = dataObj.url || dataObj.server || dataObj.serverUrl || dataObj.serverURL || 'http://localhost:${port}'
+  let url = dataObj.url || dataObj.server || dataObj.serverUrl || dataObj.serverURL || 'http://127.0.0.1:${port}'
+  // 測試
+  // url = 'http://127.0.0.1:54321'
   // 沒有http則補上port
   if (url.indexOf('http') === -1) url = `http://${url}:${port}`
   // 有設定ns則加入url內

@@ -1,7 +1,7 @@
 const { getSocketClient } = require('../libs/OZSocketClient')
 const run = () => {
   const opt = {
-    url: 'http://localhost:54321',
+    url: 'http://127.0.0.1:54321',
     path: null,
     room: 'mmjd5566'
   }

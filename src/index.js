@@ -59,6 +59,12 @@ const mqInit = async({hostData, hostId, channelId }) => {
           console.log(`after run broad cast=${testCount}`)
           channel.ack(msg)
         })
+        /*
+        setTimeout(() => {
+          console.log(`after run broad cast=${testCount}`)
+          channel.ack(msg)
+        },1000)
+        */
       },
       option: {
         noAck: false
@@ -83,7 +89,7 @@ const run = async() => {
   // 監聽mq
   const mqOpt = {
     hostData: configData.mqHost,
-    hostId: 'rabbitLocal', // TODO: 需要依照環境改主機
+    hostId: 'rabbitRD', // TODO: 需要依照環境改主機
     channelId: 'main'
   }
   await mqInit(mqOpt)

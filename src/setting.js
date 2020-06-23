@@ -9,7 +9,7 @@ module.exports = {
         port: 54321,
         redis: {
           enable: false,
-          host: 'localhost',
+          host: '127.0.0.1',
           port: 6379
         }
       }
@@ -33,7 +33,7 @@ module.exports = {
         rabbitLocal: {
           config: {
             protocol: 'amqp',
-            hostname: 'localhost',
+            hostname: '127.0.0.1',
             port: 5672,
             username: 'admin',
             password: '5578360',
