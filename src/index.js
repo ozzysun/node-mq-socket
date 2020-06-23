@@ -18,11 +18,11 @@ const loadConfig = async(setting = null) => {
   return result
 }
 // 建立socket server
-const getSocket = ({ config, socketSite, port, channel = 'all'}) => {
+const getSocket = ({ config, port, channel = 'all'}) => {
   const app = express()
   const router = express.Router()
   app.use('/', router)
-  const mySocket = new OZSocket({ app, config, socketSite } )
+  const mySocket = new OZSocket({ app, config } )
   mySocket.listen((data) => {
     // console.log(`Socket RECEIVE Data =`)
     // console.log(data)
@@ -81,8 +81,7 @@ const run = async() => {
     const socketOpt = {
       port: 54321,
       channel: 'all',
-      config: configData.config,
-      socketSite: configData.socketSite
+      config: configData.config
     }
     socket = getSocket(socketOpt)
   }

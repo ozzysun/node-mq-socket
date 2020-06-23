@@ -15,18 +15,6 @@ module.exports = {
       }
     },
     {
-      id: 'socketSite',
-      path: path.resolve('./conf/socketSite.yml'),
-      default: {
-        all: [ 'all', 'info'],
-        develop: [],
-        stage: [],
-        master: [],
-        us: [],
-        usdev: []
-      }
-    },
-    {
       id: 'mqHost',
       path: path.resolve('./conf/mqHost.yml'),
       default: {

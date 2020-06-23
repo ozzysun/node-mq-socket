@@ -5,10 +5,9 @@ const Server = require('socket.io')
 const moment = require('moment')
 const redis = require('socket.io-redis')
 class OZSocket {
-  constructor({ app = null, config, socketSite = null, defaultRoom = 'all' }) {
+  constructor({ app = null, config, defaultRoom = 'all' }) {
     this.isInit = false
     this.config = config
-    this.socketSite = socketSite
     this.defaultRoom = defaultRoom
     this.init(app)
   }
@@ -17,7 +16,7 @@ class OZSocket {
     this.app = app
     this.http = http.Server(this.app)
     // 取得允許使用的site 當把all拿掉 就一定要透過指定namespace才能連
-    this.nsArray = this.socketSite.all
+    this.nsArray = ['all', 'info']
     this.nsObj = {} // 存放namespace socket server
     const opts = {
       pingTimeout: 60000, // 100秒timeout
