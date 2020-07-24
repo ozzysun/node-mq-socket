@@ -106,4 +106,14 @@ const trace = (info) => {
     console.log(info)
   }
 }
-module.exports = { getChannel, queueReceive, queueSend, getChannelById }
+// 使用這支 簡單發送mq
+const simpleMqSend = async(mqHost, { mqHostId = 'rabbitRD', channelId = 'main', queueId, data }) => {
+  const config = mqHost[mqHostId]
+  console.log(`use mq=${config.config.protocol}://${config.config.hostname}:${config.config.port}`)
+  // 建立連線 建立channel
+  const channel = await getChannelById(config, channelId).catch(e => {
+    console.log(e)
+  })
+  await queueSend(channel, { queue: queueId, data })
+}
+module.exports = { getChannel, queueReceive, queueSend, getChannelById, simpleMqSend }
