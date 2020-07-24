@@ -1,11 +1,7 @@
 const { readYAML } = require('./libs/utils')
 const { getChannelById, queueReceive } = require('./libs/mq-utils')
 const defaultSetting = require('./setting')
-const express = require('express')
-const OZSocket = require('./libs/OZSocket')
-const { broadCast } = require('./libs/OZSocketClient')
-let testCount = 0
-let socket = null
+const { appInit, appRun } = require('./app')
 // 載入外部conf下的config檔案
 const loadConfig = async(setting = null) => {
   if (setting === null) setting = defaultSetting
@@ -17,20 +13,7 @@ const loadConfig = async(setting = null) => {
   result.require2 = require // 儲存require在動態載入用
   return result
 }
-// 建立socket server
-const getSocket = ({ config, port, channel = 'all'}) => {
-  const app = express()
-  const router = express.Router()
-  app.use('/', router)
-  const mySocket = new OZSocket({ app, config } )
-  mySocket.listen((data) => {
-    // console.log(`Socket RECEIVE Data =`)
-    // console.log(data)
-  })
-  return mySocket
-  
-}
-const mqInit = async({hostData, hostId, channelId }) => {
+const mqInit = async({hostData, hostId, channelId, queue }) => {
   // 取得設定檔
   const mqConfig = hostData[hostId]
   // 建立連線 建立channel
@@ -39,32 +22,9 @@ const mqInit = async({hostData, hostId, channelId }) => {
   })
   const queueArray = [
     { 
-      name: 'socket',
+      name: queue,
       handler: (channel, content, msg) => {
-        // console.log(`Received [socket][noAck: true] queue Rock!! %s`, content)
-        testCount = testCount + 1
-        console.log(`testCount=${testCount}`)
-        /*
-        content = {
-          url:非必要 要使用來廣播的socket server位置 預設為http://xxx:54321 // severUrl, server, serverURL 都可吃到
-          path: "/socket/socket.io" || /socket.io // serverPath 也可以吃到
-          room: 預設是all,一般以site為單位
-          ns: 非必要 目前都會是用all
-          from:
-          to:
-          data: { type: , state}
-        }
-        */
-        broadCast(content, () => {
-          console.log(`after run broad cast=${testCount}`)
-          channel.ack(msg)
-        })
-        /*
-        setTimeout(() => {
-          console.log(`after run broad cast=${testCount}`)
-          channel.ack(msg)
-        },1000)
-        */
+        appRun(content, msg)
       },
       option: {
         noAck: false
@@ -76,20 +36,13 @@ const mqInit = async({hostData, hostId, channelId }) => {
 const run = async() => {
   // 載入設定檔
   const configData = await loadConfig(defaultSetting)
-  // 初始化socket
-  if (socket === null) {
-    const socketOpt = {
-      port: 54321,
-      channel: 'all',
-      config: configData.config
-    }
-    socket = getSocket(socketOpt)
-  }
+  appInit(configData.config)
   // 監聽mq
   const mqOpt = {
     hostData: configData.mqHost,
-    hostId: 'rabbitRD', // TODO: 需要依照環境改主機
-    channelId: 'main'
+    hostId: configData.config.mq.host, // TODO: 需要依照環境改主機
+    channelId: configData.config.mq.channel,
+    queue: configData.config.mq.queue
   }
   await mqInit(mqOpt)
 }
