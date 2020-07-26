@@ -1,6 +1,6 @@
 
 const { getChannelById, queueSend } = require('../libs/mq-utils')
-const { readYAML } = require('../libs/utils')
+const { readYAML } = require('../libs/file')
 const path = require('path')
 const hostConfig = path.resolve('../../conf/mqHost.yml')
 const run = async() => {

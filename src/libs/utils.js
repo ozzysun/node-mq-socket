@@ -1,19 +1,5 @@
-const yaml = require('js-yaml')
-const path = require('path')
-const fs = require('fs')
-const { argv } = require('process')
-// yaml 讀取
-const readYAML = async(sourceFile) => {
-  const filePath = path.resolve(sourceFile)
-  return new Promise((resolve, reject) => {
-    try {
-      const doc = yaml.safeLoad(fs.readFileSync(filePath, 'utf8'))
-      resolve(doc)
-    } catch (e) {
-      reject(e)
-    }
-  })
-}
+const { argv } = require('yargs')
+const { isFileExist, writeYAML } = require(('./file'))
 const getArgs = () => {
   // mq args
   const hostId = argv.host || argv.h || null
@@ -24,4 +10,17 @@ const getArgs = () => {
   const result = { hostId, channelId, queueId, port }
   return result
 }
-module.exports = { readYAML, getArgs }
+// 產生預設的conf 目錄
+const createConfFolder = async(setting = null) => {
+  if (setting === null) setting = defaultSetting
+  try {
+    for (let i = 0; i < setting.files.length; i++) {
+      const isExist = await isFileExist(setting.files[i].path)
+      if (!isExist) await writeYAML(setting.files[i].path, setting.files[i].default)
+    }
+    return true
+  } catch (e) {
+    return false
+  }
+}
+module.exports = { createConfFolder, getArgs }
