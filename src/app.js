@@ -3,11 +3,11 @@ const OZSocket = require('./libs/OZSocket')
 const { broadCast } = require('./libs/OZSocketClient')
 let socket = null
 let testCount = 0
-const appInit = (socketConfig) => {
+const appInit = (args, socketConfig) => {
   // 初始化socket
   if (socket === null) {
     const socketOpt = {
-      port: 54321,
+      port: args.port !== null ? args.port : 54321,
       channel: 'all',
       config: socketConfig
     }
