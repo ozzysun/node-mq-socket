@@ -1,6 +1,7 @@
 const express = require('express')
 const OZSocket = require('./libs/OZSocket')
 const { broadCast } = require('./libs/OZSocketClient')
+const promMid = require('express-prometheus-middleware')
 let socket = null
 let testCount = 0
 const appInit = (socketConfig) => {
@@ -45,6 +46,12 @@ const getSocket = ({ config, port, channel = 'all'}) => {
   const app = express()
   const router = express.Router()
   app.use('/', router)
+  // -- prometheus---
+  app.use(promMid({
+    metricsPath: '/metrics',
+    collectDefaultMetrics: true,
+    requestDurationBuckets: [0.1, 0.5, 1, 1.5]
+  }))
   const mySocket = new OZSocket({ app, config } )
   mySocket.listen((data) => {
     // console.log(`Socket RECEIVE Data =`)
