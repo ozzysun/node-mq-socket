@@ -1,0 +1,3 @@
+- 2020/10/13
+  - arg支援 --enable 或 --disable設定關閉或開啟mq連線
+  - config mq 加入mq enable設定預設為false 設定是否開啟mq連線

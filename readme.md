@@ -19,6 +19,8 @@
 - 開發 app.js
   appInit: 要初始化應用程式的部份,第一個參數args為執行指令帶的args
   appRun: 當街收到mq message要執行的程式放這裡
+- 以node 執行
+  node src/index --(指定啟動參數 非必要)
 - docker build
   docker build -t node-mq-socket .
 - docker run
