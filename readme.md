@@ -8,7 +8,11 @@
   - channel | c: rabbit channel id
   - queue | q; rabbit queue id
   - port | p: socket使用的port
+  - enable 啟動mq連線
+  - disable 關閉mq連線
+  
 - 設定 conf/index/mq
+  enable: true|false 設定是否開啟mq連線
   host: 要連接的mq主機id 參考mqHost
   channel: 要連接的mq主機channel
   queue: 設定要連接的queue名稱,注意個queue必須已經有定義在mqHost

@@ -13,6 +13,7 @@ module.exports = {
           port: 6379
         },
         mq: {
+          enable: false,
           host: 'rabbitLocal',
           channel: 'main',
           queue: 'socket'

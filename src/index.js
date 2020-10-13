@@ -48,6 +48,9 @@ const run = async() => {
     channelId: args.channelId !== null ? args.channelId : configData.config.mq.channel,
     queue: args.queueId !== null ? args.queueId :configData.config.mq.queue
   }
-  await mqInit(mqOpt)
+  // mq enable則啟動mq 連線
+  if (args.enable === null || args.enable) {
+    if (configData.config.mq.enable) await mqInit(mqOpt)
+  }
 }
 run()
