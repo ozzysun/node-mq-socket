@@ -27,7 +27,7 @@ class OZSocket {
     this.io = new Server(this.http, opts)
     // 設定使用redis
     if (this.config.redis !== undefined && this.config.redis.enable) {
-      this.io.adapter(redis({ host: this.config.redis.host, port: this.config.redis.port }))
+      this.io.adapter(redis(this.config.redis))
     }
     this.isInit = true
   }
